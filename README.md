@@ -1,28 +1,42 @@
-# react-use-shortcut
+# react-use-online-status
 
-React keyboard shortcut hook.
+React hook which detects native online status changes and supports polling for more accurate network statuses.
 
 ## Install 
 
 ```bash
-npm install --save react-use-shortcut
+npm install --save react-use-online-status
 ```
 
 ## Usage
 
 ```javascript
-import useShortcut from 'react-use-shortcut'
+import useOnlineStatus from 'react-use-online-status'
 
 const FunctionalComponent = props => {
-    const submitForm = keyboardEvent => console.log('submitForm', keyboardEvent)
-    const runsBeforeSubmit = keyboardEvent => console.log('runsBeforeSubmit', keyboardEvent)
+    const isOnline = useOnlineStatus()
 
-    useShortcut('ctrl+shift+e', submitForm)
-    useShortcut('enter', submitForm)
+    return (
+        <p>Is online: {isOnline ? 'Yes' : 'No'}</p>
+    )
+}
+```
 
-    // set with priority
-    useShortcut('ctrl+shift+e', runsBeforeSubmit, 10)
-    useShortcut('enter', runsBeforeSubmit, 10)
+## Advanced usecase
+
+```javascript
+import useOnlineStatus from 'react-use-online-status'
+
+const FunctionalComponent = props => {
+    const isOnline = useOnlineStatus('/polling-url' || 'https://google.com/generate_204', { 
+        interval: 10 * 1000, /* ten seconds (default) */ 
+        timeout: 10 * 1000, /* ten seconds (default) */
+        method: 'GET' /* (default)
+    })
+
+    return (
+        <p>Is online: {isOnline ? 'Yes' : 'No'}</p>
+    )
 }
 ```
 

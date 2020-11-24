@@ -1,38 +1,44 @@
-import { useEffect, useRef, MutableRefObject } from "react";
-import { matchShortcut } from "./button-shortcuts";
+import { useEffect, useState } from "react";
 
-type ListItem = MutableRefObject<{
-  shortcut: string;
-  onTrigger: (e: KeyboardEvent) =>  any;
-  priority: number
-}>
+const timeoutAfterMs = (ms: number) => new Promise((_, reject) => setTimeout(reject, ms))
 
-const listeners: ListItem[] = []
-
-window.addEventListener('keydown', async e => {
-  for (const listener of listeners) {
-    if (!e.key) return
-    const isMatch = matchShortcut(listener.current.shortcut, e)
-    if (isMatch) {
-      const r = await listener.current.onTrigger(e)
-      if (r === 'CANCEL') break;
-    }
-  }
-})
-
-// Hook
-function useShortcut(shortcut: string, onTrigger: (e: KeyboardEvent) => any, priority = 0) {
-  const references = useRef({ shortcut, onTrigger, priority })
-  references.current.shortcut = shortcut
-  references.current.onTrigger = onTrigger
+const useOnlineStatus = (pollingUrl: false | string = false, { timeout = 10000, interval = 10000, method = 'GET' } = {}) => {
+  const [isOnline, setIsOnline] = useState(window.navigator.onLine)
 
   useEffect(() => {
-    listeners.push(references)
-    listeners.sort((a1, a2) => a2.current.priority - a1.current.priority)
-    return () => {
-      listeners.splice(listeners.indexOf(references), 1)
+    const windowOnlineOrOfflineLinstener = () => {
+      const nowOnline = window.navigator.onLine
+      console.log('on change', nowOnline)
+      if (isOnline && !nowOnline) setIsOnline(false)
+      else if (!isOnline && nowOnline) setIsOnline(true)
     }
-  }, [])
+
+    window.addEventListener('online', windowOnlineOrOfflineLinstener)
+    window.addEventListener('offline', windowOnlineOrOfflineLinstener)
+
+    const poll = async () => {
+      try {
+        await Promise.race([
+          fetch(pollingUrl as string, { method }),
+          timeoutAfterMs(timeout)
+        ])
+      } catch(err) {
+        console.warn('network status polling', err)
+        setIsOnline(false)
+      }
+    }
+
+    let handle = pollingUrl && setInterval(poll, interval)
+
+    return () => {
+      window.removeEventListener('online', windowOnlineOrOfflineLinstener)
+      window.removeEventListener('offline', windowOnlineOrOfflineLinstener)
+      if (handle) clearInterval(handle)
+    }
+
+  }, [pollingUrl, timeout, interval, method])
+
+  return isOnline
 }
 
-export default useShortcut
+export default useOnlineStatus

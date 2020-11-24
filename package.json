@@ -1,17 +1,17 @@
 {
-  "name": "react-use-shortcut",
+  "name": "react-use-online-status",
   "version": "0.1.1",
-  "description": "React keyboard shortcut hook",
+  "description": "React hook which detects native online status changes and supports polling for more accurate network statuses.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sempostma/react-use-shortcut"
+    "url": "https://github.com/sempostma/react-use-online-status"
   },
-  "homepage": "https://github.com/sempostma/react-use-shortcut",
+  "homepage": "https://github.com/sempostma/react-use-online-status",
   "bugs": {
-    "email": "react-use-shortcut@esstudio.nl",
-    "url": "https://github.com/sempostma/react-use-shortcut/issues"
+    "email": "react-use-online-status@esstudio.nl",
+    "url": "https://github.com/sempostma/react-use-online-status/issues"
   },
   "files": [
     "dist/",
@@ -25,7 +25,7 @@
     "lint:fix": "tslint --fix -c tslint.json 'src/**/*.ts'"
   },
   "keywords": [
-    "react-use-shortcut",
+    "react-use-online-status",
     "keyboard",
     "shortcut",
     "react",
@@ -35,12 +35,23 @@
   "author": "Sem Postma",
   "license": "MIT",
   "devDependencies": {
+    "@babel/preset-env": "^7.12.7",
+    "@babel/preset-react": "^7.12.7",
     "@types/react": "^16.9.56",
-    "react": "^17.0.1",
+    "@types/react-dom": "^16.9.10",
+    "babel-jest": "^26.6.3",
+    "jest": "^26.6.3",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "ts-jest": "^26.4.4",
     "tslint": "^6.0.0",
-    "typescript": "^3.8.2"
+    "typescript": "^3.8.2",
+    "whatwg-fetch": "^3.5.0"
   },
   "peerDependencies": {
     "react": ">=16.8.0"
+  },
+  "dependencies": {
+    "@testing-library/react": "^11.2.2"
   }
 }
