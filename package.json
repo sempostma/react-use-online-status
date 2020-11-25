@@ -1,6 +1,6 @@
 {
   "name": "react-use-online-status",
-  "version": "0.1.2",
+  "version": "1.1.2",
   "description": "React hook which detects native online status changes and supports polling for more accurate network statuses.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,6 +20,7 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc --watch",
+    "prepublish": "npm run build",
     "test": "jest",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "lint:fix": "tslint --fix -c tslint.json 'src/**/*.ts'"
@@ -45,6 +46,7 @@
     "babel-jest": "^26.6.3",
     "fetch-mock": "^9.11.0",
     "jest": "^26.6.3",
+    "lodash": "^4.17.20",
     "node-fetch": "^2.6.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
@@ -56,5 +58,8 @@
   },
   "peerDependencies": {
     "react": ">=16.8.0"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.165"
   }
 }
