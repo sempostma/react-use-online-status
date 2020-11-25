@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 
 const timeoutAfterMs = (ms: number) => new Promise((_, reject) => setTimeout(reject, ms))
 
-const useOnlineStatus = (pollingUrl: false | string = false, { timeout = 10000, interval = 10000, method = 'GET' } = {}) => {
+const useOnlineStatus = (pollingUrl: false | string = false, { timeout = 10000, interval = 10000, method = 'GET', onPollingError = (error: Error) => {/**/} } = { }) => {
   const [isOnline, setIsOnline] = useState(window.navigator.onLine)
 
   useEffect(() => {
     const windowOnlineOrOfflineLinstener = () => {
       const nowOnline = window.navigator.onLine
-      console.log('on change', nowOnline)
       if (isOnline && !nowOnline) setIsOnline(false)
       else if (!isOnline && nowOnline) setIsOnline(true)
     }
@@ -23,12 +22,12 @@ const useOnlineStatus = (pollingUrl: false | string = false, { timeout = 10000, 
           timeoutAfterMs(timeout)
         ])
       } catch(err) {
-        console.warn('network status polling', err)
+        if (onPollingError) onPollingError(err)
         setIsOnline(false)
       }
     }
 
-    let handle = pollingUrl && setInterval(poll, interval)
+    const handle = pollingUrl && setInterval(poll, interval)
 
     return () => {
       window.removeEventListener('online', windowOnlineOrOfflineLinstener)
